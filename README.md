@@ -60,8 +60,8 @@ A sleek and intelligent system combining a **Chrome extension** with a **FastAPI
 
 ```bash
 # Clone the repository
-git clone <repository-url>
-cd <repository-name>/python_server
+git clone https://github.com/devdastl/Web-Index-AI_EAG_S7.git
+cd Web-Index-AI_EAG_S7/python_server
 
 # Install UV if not already installed
 curl -LsSf https://astral.sh/uv/install.sh | sh
