@@ -1,95 +1,125 @@
-# Web Page Indexer - Smart Web Content Management
+# 🌐 Web Page Indexer — Smart Web Content Management
 
-A powerful Chrome extension paired with a Python backend that helps you index and semantically search through web pages you've visited. This tool automatically processes web pages, converts them to a searchable format, and allows you to perform intelligent searches across your indexed content.
+![Build](https://img.shields.io/badge/build-passing-brightgreen?style=flat-square)
+![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-blue?style=flat-square)
+![Python](https://img.shields.io/badge/Python-3.10+-blue.svg?style=flat-square)
 
-## Features
 
-- **Automatic Web Page Indexing**: Automatically indexes web pages you visit through the Chrome extension
-- **Semantic Search**: Perform natural language searches across your indexed content
-- **Smart Context Retrieval**: Get relevant context and summaries from your indexed pages
-- **Cross-Platform Support**: Works on any platform that supports Chrome
-- **Real-time Processing**: Instant indexing and search capabilities
-- **Intelligent Query Refinement**: Uses AI to refine and improve search queries
-- **URL Management**: Keep track of processed URLs and their status
+A sleek and intelligent system combining a **Chrome extension** with a **FastAPI-powered Python backend** to help you index, manage, and semantically search through web content you've visited — all in real-time.
 
-## Repository Structure
+## 🚀 Overview
 
-```
+**Web Page Indexer** is your personal web memory. It continuously monitors and stores key content from pages you visit and empowers you to ask natural language questions to retrieve past insights, summaries, and sources.
+
+---
+
+## ✨ Key Features
+
+- 🔎 **Automatic Indexing**: Seamlessly track and capture content from visited web pages.
+- 🧠 **Semantic Search**: Search using natural language — not just keywords.
+- 📚 **Context-Aware Summaries**: Get intelligent summaries with contextual awareness.
+- ⚡ **Real-Time Processing**: Instant indexing and search without delays.
+- 🌍 **Cross-Platform Support**: Works on any OS running Google Chrome.
+- 🛠️ **Smart Query Refinement**: AI-powered suggestions to improve your queries.
+- 🔗 **URL Status Tracking**: Keep tabs on which URLs are indexed and their status.
+
+---
+
+## 🧩 Repository Structure
+
+```bash
 .
-├── chrome_extension/           # Chrome Extension files
-│   ├── manifest.json          # Extension configuration
-│   ├── popup.html            # Extension popup interface
-│   ├── popup.js              # Popup functionality
-│   ├── background.js         # Background service worker
-│   └── styles.css            # Extension styling
+├── chrome_extension/           # Chrome Extension frontend
+│   ├── manifest.json           # Extension configuration (Manifest V3)
+│   ├── popup.html              # UI for extension popup
+│   ├── popup.js                # Extension popup logic
+│   ├── background.js           # Service worker for background tasks
+│   └── styles.css              # CSS styling for extension
 │
-└── python_server/            # Backend server
-    ├── agent.py             # Main FastAPI server
-    ├── test_backend.py      # Backend tests
-    └── utils/               # Utility modules
-        ├── model.py         # Data models
-        ├── memory.py        # Memory management
-        ├── perception.py    # Input processing
-        └── prompt.py        # AI prompts
+└── python_server/              # Python backend (FastAPI)
+    ├── agent.py                # Main FastAPI app
+    ├── test_backend.py         # Unit tests
+    └── utils/                  # Core utility modules
+        ├── model.py            # Data models
+        ├── memory.py           # Memory management
+        ├── perception.py       # Page content processor
+        └── prompt.py           # Prompt generation and AI logic
 ```
 
-## Getting Started
+---
 
-### Prerequisites
+## 🛠️ Getting Started
 
-- Google Chrome browser
-- Python 3.8 or higher
-- UV package manager
+### ✅ Prerequisites
 
-### Setting up the Python Backend
+- [Google Chrome](https://www.google.com/chrome/)
+- Python 3.10+
+- [UV package manager](https://github.com/astral-sh/uv)
 
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd <repository-name>/python_server
-   ```
+### ⚙️ Setting Up the Python Backend
 
-2. Install dependencies using UV:
-   ```bash
-   # Install UV if you haven't already
-   curl -LsSf https://astral.sh/uv/install.sh | sh
+```bash
+# Clone the repository
+git clone <repository-url>
+cd <repository-name>/python_server
 
-   # Install dependencies from uv.lock and pyproject.toml
-   uv pip install --requirement uv.lock
-   ```
+# Install UV if not already installed
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-3. Create a `token.env` file in the root directory with your API credentials:
-   ```
-   API_TOKEN=your_api_key_here
-   ```
+# Install project dependencies
+uv pip install --requirement uv.lock
+```
 
-4. Start the backend server:
-   ```bash
-   uv run agent.py
-   ```
-   The server will start at `http://localhost:8000`
+Create a `.env` or `token.env` file with your API credentials:
 
-### Installing the Chrome Extension
+```env
+API_TOKEN=your_api_key_here
+```
 
-1. Open Google Chrome and navigate to `chrome://extensions/`
-2. Enable "Developer mode" in the top right corner
-3. Click "Load unpacked" and select the `chrome_extension` directory from this repository
-4. The extension icon should appear in your Chrome toolbar
+Run the backend server:
 
-## Usage
+```bash
+uv run agent.py
+```
 
-1. Click the extension icon to open the popup interface
-2. Browse web pages normally - they will be automatically indexed
-3. Use the search bar in the extension popup to perform semantic searches
-4. View search results with relevant context and source URLs
+Your server will be available at: `http://localhost:8000`
 
-## Development
+---
 
-- The backend uses FastAPI for the REST API
-- The Chrome extension uses Manifest V3
-- Memory management is handled through a custom implementation in `utils/memory.py`
-- AI processing is done using Google's Generative AI
+### 🧩 Installing the Chrome Extension
 
-## Contributing
+1. Go to `chrome://extensions/` in Chrome
+2. Enable **Developer Mode** (top-right toggle)
+3. Click **Load unpacked**
+4. Select the `chrome_extension` folder from the repository
+5. Extension icon should now appear in the Chrome toolbar
 
-Feel free to submit issues, fork the repository, and create pull requests for any improvements.
+---
+
+## 💡 How to Use
+
+1. Open the extension by clicking its icon in the toolbar.
+2. Start browsing — pages are indexed automatically in the background.
+3. Type natural language queries into the popup search bar.
+4. Instantly receive summarized results with links to original content.
+
+---
+
+## 🔧 Development Notes
+
+- **Backend**: Built using [FastAPI](https://fastapi.tiangolo.com/) for high-performance async APIs.
+- **Frontend**: Chrome Extension using Manifest V3.
+- **AI Engine**: Powered by Google's Generative AI and custom semantic processing.
+- **Memory Handling**: Advanced memory management in `utils/memory.py`.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Whether it's a bug fix, a feature request, or a new idea — open a pull request or submit an issue.
+
+---
+
+## 📄 License
+
+MIT License. See `LICENSE` file for details.
