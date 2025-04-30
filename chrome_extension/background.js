@@ -1,4 +1,5 @@
-const API_BASE_URL = 'http://localhost:8000';
+// You can change this to your server's address
+const API_BASE_URL = 'http://your-server-ip:8000';
 
 // Initialize storage with empty set if not exists
 chrome.runtime.onInstalled.addListener(() => {

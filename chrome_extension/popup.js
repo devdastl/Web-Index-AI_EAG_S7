@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const loadingDiv = document.getElementById('loading');
   const errorDiv = document.getElementById('error');
 
-  const API_BASE_URL = 'http://localhost:8000';
+  // You can change this to your server's address
+  const API_BASE_URL = 'http://your-server-ip:8000';
 
   async function performSearch(query) {
     try {
