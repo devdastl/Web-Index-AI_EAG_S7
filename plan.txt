@@ -1,0 +1,193 @@
+# Chrome Extension + Python Server RAG Project Plan
+
+## Project Overview
+This project consists of two main components:
+1. A Chrome Extension that monitors visited URLs and provides search functionality
+2. A Python FastAPI server that implements RAG (Retrieval Augmented Generation) for semantic search
+
+## How the Plugin Works
+
+### Automatic URL Processing
+1. URL Monitoring:
+   - Plugin automatically detects when user visits a new website
+   - Extracts the current URL from the active tab
+   - Checks if URL has been previously processed using chrome.storage
+   - If URL is new, sends it to Python server via PUT API call
+   - Stores processed URL in chrome.storage to prevent duplicate processing
+
+2. Server-side Processing:
+   - Server receives URL via /api/send_url endpoint
+   - Uses MarkItDown to convert HTML content to clean text
+   - Splits text into manageable chunks
+   - Generates embeddings for each chunk
+   - Stores chunks and embeddings in vector store
+   - Returns success/failure status to extension
+
+### Search Functionality
+1. User Interface:
+   - Extension popup contains a text input box
+   - Submit button to trigger search
+   - Loading indicator during API calls
+   - Error messages for failed operations
+
+2. Search Process:
+   - User enters query in the text box
+   - Clicks submit button
+   - Extension sends query to /api/get_context endpoint
+   - Server performs semantic search using query embedding
+   - Returns 1-2 most relevant URLs and text chunks
+
+3. Result Display:
+   - Extension receives URLs and text chunks
+   - Opens each URL in a new tab
+   - Injects content script to highlight matching text
+   - Scrolls to highlighted text automatically
+   - Provides visual feedback for highlighted content
+
+### Status Checking
+1. URL Status Verification:
+   - Extension can check if a URL has been processed
+   - Calls /api/get_status endpoint with URL
+   - Server checks if URL exists in vector store
+   - Returns processing status to extension
+
+## Project Structure
+```
+project_root/
+├── chrome_extension/
+│   ├── manifest.json
+│   ├── popup.html
+│   ├── popup.js
+│   ├── background.js
+│   ├── content.js
+│   └── styles.css
+└── python_server/
+    ├── requirements.txt
+    ├── main.py
+    ├── utils/
+    │   ├── __init__.py
+    │   ├── text_processor.py
+    │   └── embeddings.py
+    └── README.md
+```
+
+## Component Details
+
+### Chrome Extension Features
+1. Automatic URL Monitoring:
+   - Monitors every new website visit
+   - Sends URL to Python server via PUT API call
+   - Implements URL deduplication to prevent duplicate API calls
+   - Uses chrome.storage to track processed URLs
+
+2. Search Interface:
+   - Input text box for user queries
+   - Submit button to trigger search
+   - Sends query to Python server via POST/PUT API
+   - Displays loading state during API calls
+
+3. Result Handling:
+   - Receives 1-2 URLs and corresponding text chunks from server
+   - Opens received URLs in new tabs
+   - Highlights the specified text chunks in opened pages
+   - Handles errors gracefully with user feedback
+
+### Python Server Features
+1. API Endpoints:
+   - PUT /api/send_url: Receives and processes new URLs
+   - POST /api/get_context: Handles user queries and returns relevant chunks
+   - GET /api/get_status: Checks if a URL has been indexed
+
+2. RAG Implementation:
+   - Uses MarkItDown package for HTML to text conversion
+   - Implements text chunking for better search results
+   - Creates embeddings for semantic search
+   - Maintains vector store for efficient retrieval
+
+## Phase 1: Initial Setup and Basic Structure
+
+### Chrome Extension Setup
+1. Create manifest.json with necessary permissions:
+   - activeTab: For accessing current tab information
+   - storage: For URL deduplication
+   - tabs: For opening new tabs
+   - scripting: For content script injection
+   - host permissions for API calls
+
+2. Create popup interface:
+   - Create popup.html with search input and submit button
+   - Style with CSS for modern look
+   - Basic popup.js for UI interactions
+   - Implement loading states and error messages
+
+3. Create background.js:
+   - Setup URL monitoring using chrome.tabs.onUpdated
+   - Implement URL deduplication using chrome.storage.local
+   - Setup API communication with Python server
+   - Handle API errors and retries
+
+4. Create content.js:
+   - Implement text highlighting using DOM manipulation
+   - Handle new tab operations
+   - Implement scroll to highlighted text
+   - Add visual indicators for highlighted content
+
+### Python Server Setup
+1. Create virtual environment and requirements.txt with initial dependencies:
+   - fastapi: For API framework
+   - uvicorn: For ASGI server
+   - markitdown: For HTML to text conversion
+   - beautifulsoup4: For HTML parsing
+   - sentence-transformers: For embeddings
+   - pydantic: For data validation
+   - python-multipart: For form data handling
+
+2. Setup basic FastAPI application structure:
+   - Create main.py with placeholder endpoints:
+     * PUT /api/send_url: Accepts URL and returns processing status
+     * POST /api/get_context: Accepts query and returns relevant chunks
+     * GET /api/get_status: Checks URL indexing status
+   - Implement CORS middleware for Chrome extension
+   - Add basic error handling
+
+3. Create utility modules structure:
+   - text_processor.py: HTML parsing and text extraction
+   - embeddings.py: Vector operations and semantic search
+
+## Phase 2: Core Functionality Implementation (To be implemented later)
+
+### Chrome Extension Implementation
+1. Implement URL monitoring and sending to server
+2. Create search interface and API integration
+3. Implement text highlighting in new tabs
+4. Add error handling and user feedback
+
+### Python Server Implementation
+1. Implement HTML content extraction
+2. Setup RAG pipeline
+3. Implement vector store
+4. Add semantic search functionality
+
+## Phase 3: Testing and Refinement (To be implemented later)
+1. Test URL monitoring and deduplication
+2. Test search functionality
+3. Test text highlighting
+4. Performance optimization
+5. Error handling improvements
+
+## Initial Development Steps (Current Focus)
+
+1. Create project directory structure
+2. Setup Python server with placeholder endpoints
+3. Create basic manifest and structure for Chrome extension
+4. Test basic communication between extension and server
+
+## Technical Notes
+- Server will run on localhost:8000 during development
+- All API endpoints will include proper error handling
+- Chrome extension will handle offline scenarios gracefully
+- Implement proper security measures for API communication
+- Use async/await for better performance in FastAPI
+- Implement rate limiting for API endpoints
+- Add logging for debugging and monitoring
+- Consider implementing caching for frequently accessed data 
