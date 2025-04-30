@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Web Page Indexer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Web Page Indexer</h1>
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Enter your search query...">
+      <button id="searchButton">Search</button>
+    </div>
+    <div id="status" class="status"></div>
+    <div id="loading" class="loading hidden">
+      <div class="spinner"></div>
+      <p>Processing...</p>
+    </div>
+    <div id="error" class="error hidden"></div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html> 

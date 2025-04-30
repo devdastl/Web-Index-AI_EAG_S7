@@ -68,7 +68,7 @@ project_root/
     │   ├── __init__.py
     │   ├── text_processor.py
     │   └── embeddings.py
-    └── README.md
+├── README.md
 ```
 
 ## Component Details
