@@ -1,0 +1,6 @@
+token.env
+.venv
+env
+venv
+python_server/utils/__pycache__
+python_server/__pycache__
