@@ -1,16 +1,51 @@
 document.addEventListener('DOMContentLoaded', function() {
+  const API_BASE_URL = 'http://your-server-ip:8000';
+  
+  // Get DOM elements
   const searchInput = document.getElementById('searchInput');
   const searchButton = document.getElementById('searchButton');
-  const statusDiv = document.getElementById('status');
   const loadingDiv = document.getElementById('loading');
   const errorDiv = document.getElementById('error');
+  const resultsDiv = document.getElementById('results');
+  const textOutput = document.getElementById('textOutput');
+  const urlList = document.getElementById('urlList');
 
-  // You can change this to your server's address
-  const API_BASE_URL = 'http://your-server-ip:8000';
+  // Show/hide elements
+  function toggleLoading(show) {
+    loadingDiv.classList.toggle('hidden', !show);
+    searchButton.disabled = show;
+  }
+
+  function showError(message) {
+    errorDiv.textContent = message;
+    errorDiv.classList.remove('hidden');
+    resultsDiv.classList.add('hidden');
+  }
+
+  function hideError() {
+    errorDiv.classList.add('hidden');
+    errorDiv.textContent = '';
+  }
+
+  function displayResults(data) {
+    // Display the text response
+    textOutput.textContent = data.text;
+
+    // Display the URLs
+    urlList.innerHTML = ''; // Clear existing URLs
+    data.url.forEach(url => {
+      const li = document.createElement('li');
+      li.textContent = url;
+      urlList.appendChild(li);
+    });
+
+    // Show results section
+    resultsDiv.classList.remove('hidden');
+  }
 
   async function performSearch(query) {
     try {
-      showLoading();
+      toggleLoading(true);
       hideError();
 
       const response = await fetch(`${API_BASE_URL}/api/get_context`, {
@@ -26,61 +61,15 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       const data = await response.json();
-      
-      // Open each URL in a new tab
-      for (const result of data.results) {
-        const tab = await chrome.tabs.create({ url: result.url });
-        
-        // Wait for the tab to load
-        chrome.tabs.onUpdated.addListener(function listener(tabId, info) {
-          if (tabId === tab.id && info.status === 'complete') {
-            chrome.tabs.onUpdated.removeListener(listener);
-            
-            // Inject content script to highlight text
-            chrome.scripting.executeScript({
-              target: { tabId: tab.id },
-              function: highlightText,
-              args: [result.text]
-            });
-          }
-        });
-      }
-
-      showStatus('Search completed successfully');
+      displayResults(data);
     } catch (error) {
       showError('Failed to perform search: ' + error.message);
     } finally {
-      hideLoading();
+      toggleLoading(false);
     }
   }
 
-  function showLoading() {
-    loadingDiv.classList.remove('hidden');
-    searchButton.disabled = true;
-  }
-
-  function hideLoading() {
-    loadingDiv.classList.add('hidden');
-    searchButton.disabled = false;
-  }
-
-  function showError(message) {
-    errorDiv.textContent = message;
-    errorDiv.classList.remove('hidden');
-  }
-
-  function hideError() {
-    errorDiv.classList.add('hidden');
-    errorDiv.textContent = '';
-  }
-
-  function showStatus(message) {
-    statusDiv.textContent = message;
-    setTimeout(() => {
-      statusDiv.textContent = '';
-    }, 3000);
-  }
-
+  // Event listeners
   searchButton.addEventListener('click', () => {
     const query = searchInput.value.trim();
     if (query) {
@@ -95,36 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
       searchButton.click();
     }
   });
-});
 
-// Function to be injected into the page for highlighting text
-function highlightText(text) {
-  const walker = document.createTreeWalker(
-    document.body,
-    NodeFilter.SHOW_TEXT,
-    null,
-    false
-  );
-
-  const nodes = [];
-  let node;
-  while (node = walker.nextNode()) {
-    if (node.textContent.includes(text)) {
-      nodes.push(node);
-    }
-  }
-
-  nodes.forEach(node => {
-    const span = document.createElement('span');
-    span.style.backgroundColor = 'yellow';
-    span.style.color = 'black';
-    span.textContent = node.textContent;
-    node.parentNode.replaceChild(span, node);
-  });
-
-  // Scroll to the first highlight
-  const firstHighlight = document.querySelector('span[style*="background-color: yellow"]');
-  if (firstHighlight) {
-    firstHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-} 
+  // Focus search input when popup opens
+  searchInput.focus();
+}); 

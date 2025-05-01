@@ -2,21 +2,33 @@
 <html>
 <head>
   <title>Web Page Indexer</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
   <div class="container">
-    <h1>Web Page Indexer</h1>
-    <div class="search-container">
+    <div class="search-section">
       <input type="text" id="searchInput" placeholder="Enter your search query...">
       <button id="searchButton">Search</button>
     </div>
-    <div id="status" class="status"></div>
+
     <div id="loading" class="loading hidden">
       <div class="spinner"></div>
-      <p>Processing...</p>
+      <span>Searching...</span>
     </div>
+
     <div id="error" class="error hidden"></div>
+
+    <div id="results" class="results hidden">
+      <div class="result-section">
+        <h3>Answer:</h3>
+        <div id="textOutput" class="text-output"></div>
+      </div>
+      
+      <div class="result-section">
+        <h3>Source URLs:</h3>
+        <ul id="urlList" class="url-list"></ul>
+      </div>
+    </div>
   </div>
   <script src="popup.js"></script>
 </body>
