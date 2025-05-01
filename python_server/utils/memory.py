@@ -6,7 +6,7 @@ import faiss
 from tqdm import tqdm
 import numpy as np
 import requests
-
+from datetime import datetime
 EMBED_URL = "http://192.168.0.111:11434/api/embeddings"
 EMBED_MODEL = "mxbai-embed-large:335m"
 
@@ -35,6 +35,9 @@ class MemoryManager:
         response.raise_for_status()
         return np.array(response.json()["embedding"], dtype=np.float32)
 
+    # Get the current date, time and day of the week
+    def get_datetime(self) -> str:
+        return datetime.now().strftime("%Y-%m-%d %H:%M:%S %A")
 
     def check_duplicate_url(self, given_url) -> bool:
         """Check if a memory already exists in the list"""
@@ -69,7 +72,7 @@ class MemoryManager:
         for i, chunk in enumerate(tqdm(chunks, desc=f"Embedding {url}")):
             embedding = self.__get_embedding__(chunk)
             embeddings_for_file.append(embedding)
-            new_metadata.append({"url": url, "chunk": chunk, "chunk_id": f"{url}_{i}"})
+            new_metadata.append({"url": url, "chunk": chunk, "chunk_id": f"{url}_{i}", "timestamp": self.get_datetime()})
         if embeddings_for_file:
             if index is None:
                 dim = len(embeddings_for_file[0])
