@@ -4,3 +4,5 @@ env
 venv
 python_server/utils/__pycache__
 python_server/__pycache__
+python_server/utils/faiss_index/index.bin
+python_server/utils/faiss_index/metadata.json
