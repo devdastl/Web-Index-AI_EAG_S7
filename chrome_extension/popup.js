@@ -9,6 +9,30 @@ document.addEventListener('DOMContentLoaded', function() {
   const resultsDiv = document.getElementById('results');
   const textOutput = document.getElementById('textOutput');
   const urlList = document.getElementById('urlList');
+  const statusDot = document.querySelector('.status-dot');
+  const statusText = document.querySelector('.status-text');
+
+  // Check backend health status
+  async function checkBackendHealth() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/health`);
+      if (response.ok) {
+        statusDot.classList.add('connected');
+        statusDot.classList.remove('disconnected');
+        statusText.textContent = 'Connected to backend';
+      } else {
+        throw new Error('Backend not responding');
+      }
+    } catch (error) {
+      statusDot.classList.add('disconnected');
+      statusDot.classList.remove('connected');
+      statusText.textContent = 'Backend disconnected';
+    }
+  }
+
+  // Check health status initially and every 30 seconds
+  checkBackendHealth();
+  setInterval(checkBackendHealth, 30000);
 
   // Show/hide elements
   function toggleLoading(show) {
@@ -31,11 +55,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Display the text response
     textOutput.textContent = data.text;
 
-    // Display the URLs
+    // Display the URLs as clickable links
     urlList.innerHTML = ''; // Clear existing URLs
     data.url.forEach(url => {
       const li = document.createElement('li');
-      li.textContent = url;
+      const link = document.createElement('a');
+      link.href = url;
+      link.textContent = url;
+      link.target = '_blank'; // Open in new tab
+      li.appendChild(link);
       urlList.appendChild(li);
     });
 

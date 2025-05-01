@@ -111,4 +111,43 @@
 
 .hidden {
   display: none !important;
+}
+
+.status-indicator {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ccc;
+}
+
+.status-dot.connected {
+  background-color: #2ecc71;
+}
+
+.status-dot.disconnected {
+  background-color: #e74c3c;
+}
+
+.url-list li {
+  margin: 5px 0;
+}
+
+.url-list a {
+  color: #2980b9;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.url-list a:hover {
+  text-decoration: underline;
 } 
