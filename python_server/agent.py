@@ -11,10 +11,11 @@ from utils.model import *
 from utils.memory import MemoryManager
 from utils.perception import perceive_input
 from utils.prompt import query_prompt, result_prompt
+
 #initialize the app
 app = FastAPI()
 markitdown_instance = MarkItDown()
-memory_manager = MemoryManager()
+memory_manager = MemoryManager(chunk_size=256, overlap=40)
 
 # Load environment variables
 load_dotenv("../token.env")
@@ -79,7 +80,7 @@ async def get_context(request: SearchRequest):
     print(f"Refined query: {refined_query}")
 
     # Get context from memory
-    context = memory_manager.retrieve_memories(refined_query, 2)
+    context = memory_manager.retrieve_memories(refined_query, 1)
 
     #join the context into a single string
     joined_context = "\n".join([item["data"] for item in context])
