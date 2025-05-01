@@ -10,7 +10,7 @@ from google import genai
 from utils.model import *
 from utils.memory import MemoryManager
 from utils.perception import perceive_input
-
+from utils.prompt import query_prompt, result_prompt
 #initialize the app
 app = FastAPI()
 markitdown_instance = MarkItDown()
@@ -75,20 +75,27 @@ async def get_context(request: SearchRequest):
     print(f"Received search query: {request.query}")
 
     #Refine the query
-    refined_query = perceive_input(client, request.query)
+    refined_query = perceive_input(client, query_prompt.replace("_user_query_", request.query))
     print(f"Refined query: {refined_query}")
 
     # Get context from memory
     context = memory_manager.retrieve_memories(refined_query, 2)
-    results = []
-    for item in context:
-        results.append(SearchResult(
-            url=item["url"],
-            text=item["data"]
-        ))
 
+    #join the context into a single string
+    joined_context = "\n".join([item["data"] for item in context])
+
+    #query with context
+    context_query = result_prompt.replace("_user_query_", request.query).replace("_context_", joined_context)
+    query_result = perceive_input(client, context_query)
+    print(f"Result: {query_result}")
+
+    urls = [item["url"] for item in context]
+    result = SearchResult(
+            url=list(set(urls)),
+            text=query_result
+        )
     # Dummy response with example URLs and chunks
-    return results
+    return result
 
 @app.get("/api/get_status")
 async def get_status(url: str):
@@ -96,5 +103,9 @@ async def get_status(url: str):
     # Dummy response
     return {"status": "processed", "message": "URL has been processed"}
 
+@app.get("/api/health")
+async def health():
+    return {"status": "ok"}
+
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True) 
+    uvicorn.run("agent:app", host="0.0.0.0", port=8000, reload=True) 

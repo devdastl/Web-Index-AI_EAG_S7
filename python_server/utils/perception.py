@@ -1,7 +1,7 @@
 import json
 from typing import Dict, Any
 from google import genai
-from utils.prompt import query_prompt
+
 
 def clean_code_block(text: str) -> str:
     """Clean JSON code block from LLM response"""
@@ -25,12 +25,11 @@ def generate_with_timeout(client: genai.Client, prompt: str, timeout: int = 10) 
         print(f"Error in LLM generation: {e}")
         raise
 
-def perceive_input(client: genai.Client, user_input: str) -> str:
+def perceive_input(client: genai.Client, prompt: str) -> str:
     """
     Process user input and extract key information using LLM
     Returns a structured perception result
     """
-    prompt = query_prompt.replace("_user_query_", user_input)
     try:
         response_text = generate_with_timeout(client, prompt)
         response_text = clean_code_block(response_text)

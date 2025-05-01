@@ -8,7 +8,7 @@ class SearchRequest(BaseModel):
     query: str
 
 class SearchResult(BaseModel):
-    url: str
+    url: List[str]
     text: str
 
 class SearchResponse(BaseModel):
